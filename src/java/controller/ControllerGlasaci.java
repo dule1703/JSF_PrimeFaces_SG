@@ -115,7 +115,7 @@ public class ControllerGlasaci {
         ControllerGlasaci ctrlGlas = new ControllerGlasaci();
         /* Boolean bool = ctrlGlas.checkLogin("oo_mzvornik", "oo_mzvornik");
         System.out.println(bool);*/
-        ctrlGlas.izmeniGlasaca(21, "Јована", "Павловић", "Николе Тесле 43", 106, "Центар 2", "064777777777", "15/02/2021", "2222222222222", 
+        ctrlGlas.izmeniGlasaca(21, "Марија", "Павловић", "Николе Тесле 43", 106, "Центар 2", "064777777777", "15/02/2021", "2222222222222", 
                 "19/02/1988", "Не, немам носиоца", "", "", "", "", "", "");
 
     }
