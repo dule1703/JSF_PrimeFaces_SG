@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:panel style="position: relative; padding-bottom: 100px;">
+                <h:panelGrid columns="2" style="width: 700px; margin: 0 auto;">
+                    <p:outputLabel style="float: right;" value="Име:" /> 
+                    <p:inputText id="name" style="width: 60%;" placeholder="Унесите ваше име..." required="true" />
+                    <p:outputLabel style="float: right;" value="Презиме:" /> 
+                    <p:inputText id="surname" style="width: 60%;" placeholder="Унесите ваше презиме..." required="true" />
+                    <p:outputLabel style="float: right;" value="ЈМБГ:" /> 
+                    <p:inputText id="jmbg" style="width: 60%;" placeholder="Унесите ваш ЈМБГ..."  title="Можете користити само brojeve - 13 цифара" >
+                        <f:validateRegex pattern="^[0-9]{13}$" />
+                    </p:inputText>
+                </h:panelGrid>
+                <p:commandButton value="Login" style="position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 30px;" />
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+
