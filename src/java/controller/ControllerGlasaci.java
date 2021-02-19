@@ -111,12 +111,12 @@ public class ControllerGlasaci {
         return true;
     }
 
-    /**/ public static void main(String args[]) {
+    /* public static void main(String args[]) {
         ControllerGlasaci ctrlGlas = new ControllerGlasaci();
         /* Boolean bool = ctrlGlas.checkLogin("oo_mzvornik", "oo_mzvornik");
-        System.out.println(bool);*/
+        System.out.println(bool);
         ctrlGlas.izmeniGlasaca(21, "Марија", "Павловић", "Николе Тесле 43", 106, "Центар 2", "064777777777", "15/02/2021", "2222222222222", 
                 "19/02/1988", "Не, немам носиоца", "", "", "", "", "", "");
 
-    }
+    }*/
 }

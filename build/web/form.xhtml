@@ -5,24 +5,41 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Унос података</title>      
+
     </h:head>
     <h:body>
         <h:form>
-            <p:panel style="position: relative; padding-bottom: 100px;">
-                <h:panelGrid columns="2" style="width: 700px; margin: 0 auto;">
-                    <p:outputLabel style="float: right;" value="Име:" /> 
-                    <p:inputText id="name" style="width: 60%;" placeholder="Унесите ваше име..." required="true" />
-                    <p:outputLabel style="float: right;" value="Презиме:" /> 
-                    <p:inputText id="surname" style="width: 60%;" placeholder="Унесите ваше презиме..." required="true" />
-                    <p:outputLabel style="float: right;" value="ЈМБГ:" /> 
-                    <p:inputText id="jmbg" style="width: 60%;" placeholder="Унесите ваш ЈМБГ..."  title="Можете користити само brojeve - 13 цифара" >
-                        <f:validateRegex pattern="^[0-9]{13}$" />
-                    </p:inputText>
-                </h:panelGrid>
-                <p:commandButton value="Login" style="position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 30px;" />
-            </p:panel>
-        </h:form>
+            <p:growl id="message"/>               
+
+            <h:panelGrid columns="2" style="position: relative; width: 750px; margin: 0 auto;">
+                <p:outputLabel style="float: right;" value="Име:" /> 
+                <p:inputText value="#{glasaciMB.ime}" id="ime" style="width: 60%;" placeholder="Унесите ваше име..." required="true" />
+                <p:outputLabel style="float: right;" value="Презиме:" /> 
+                <p:inputText value="#{glasaciMB.prezime}" id="prezime" style="width: 60%;" placeholder="Унесите ваше презиме..." required="true" />
+                <p:outputLabel style="float: right;" value="ЈМБГ:" /> 
+                <p:inputText value="#{glasaciMB.jmbg}" id="jmbg" style="width: 60%;" placeholder="Унесите ваш ЈМБГ..."  title="Можете користити само brojeve - 13 цифара" >
+                    <f:validateRegex pattern="^[0-9]{13}$" />
+                </p:inputText>               
+                <p:outputLabel style="float: right;" value="Датум рођења:"/>                
+                <p:calendar id="inline" value="#{glasaciMB.datum_rodj}"  mode="popup"   showOn="button" navigator="true" pattern="dd/MM/yyyy" yearRange="1910:2003" /> 
+                <p:outputLabel style="float: right;" value="Телефон:" /> 
+                <p:inputText value="#{glasaciMB.broj_telefona}" id="broj_telefona" style="width: 60%;" placeholder="Унесите број телефона..." required="true" >
+                    <f:validateRegex pattern="^[-+\s0-9/]+$" />
+                </p:inputText>
+                <p:outputLabel style="float: right;" value="Адреса:" /> 
+                <p:inputText value="#{glasaciMB.adresa}" id="adresa" style="width: 60%;" placeholder="Унесите вашу адресу..." required="true" />
+                <p:outputLabel value="Општине:"/>
+                <p:selectOneMenu id="opstine" value="#{selectOneMenuView.labeled}" label="Изаберите општину....">
+                    <f:selectItems value="#{selectOneMenuView.cities}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton action="#{glasaciMB.snimiGlasaca}" value="Login" update="message" style="position: absolute; left: 0; right: 0; margin: 0 auto;" />
+
+
+            </h:panelGrid>  
+
+        </h:form>  
     </h:body>
 </html>
 

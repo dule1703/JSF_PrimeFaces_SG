@@ -1,14 +1,16 @@
 package views_manage_beans;
 
 import controller.ControllerGlasaci;
-import controller.ControllerOpstine;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import model.Opstine;
-import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "glasaciMB")
 @SessionScoped
@@ -24,7 +26,7 @@ public class GlasaciMB implements Serializable {
     private String broj_telefona;
     private String datum;
     private String jmbg;
-    private String datum_rodj;
+    private Date datum_rodj;
     private String nosilac_glasova;
     private String ime_nosioca_glasova;
     private String opstinski_poverenik;
@@ -107,11 +109,11 @@ public class GlasaciMB implements Serializable {
         this.jmbg = jmbg;
     }
 
-    public String getDatum_rodj() {
+    public Date getDatum_rodj() {
         return datum_rodj;
     }
 
-    public void setDatum_rodj(String datum_rodj) {
+    public void setDatum_rodj(Date datum_rodj) {
         this.datum_rodj = datum_rodj;
     }
 
@@ -162,8 +164,6 @@ public class GlasaciMB implements Serializable {
     public void setCtrlGlasaci(ControllerGlasaci ctrlGlasaci) {
         this.ctrlGlasaci = ctrlGlasaci;
     }
-    
-    
 
     public String getUsername() {
         return username;
@@ -193,6 +193,35 @@ public class GlasaciMB implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failure!", "Your username or password is not correct!"));
             return "";
         }
+    }
+
+    public void onDateSelect(SelectEvent<Date> event) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Изабрани датум:", sdf.format(event.getObject())));
+    }
+
+    public void snimiGlasaca() {
+        try {
+            
+            DateFormat df_datum = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date today = Calendar.getInstance().getTime();
+            String datumToday = df_datum.format(today);
+            DateFormat df_datumRodj = new SimpleDateFormat("dd/MM/yyyy");
+            String datumRodjenja = df_datumRodj.format(getDatum_rodj());
+            
+            ctrlGlasaci.snimiGlasaca(getIme(), getPrezime(), getAdresa(), 133, "Центар 2", getBroj_telefona(), datumToday , getJmbg(),
+                    datumRodjenja, "Не, немам носиоца", "", "", "", "", "", "");
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Успешно снимљен гласач!", ""));
+        } catch (Exception e) {
+
+        }
+
+    }
+    
+    public void clearForm(){
+        setIme("");
     }
 
     public String testMethodMB() {

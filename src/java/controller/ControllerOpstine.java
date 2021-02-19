@@ -4,6 +4,7 @@ import dbbroker.DBBroker;
 import java.util.ArrayList;
 import java.util.Date;
 import model.Opstine;
+import model.SpisakOpstina;
 
 public class ControllerOpstine {
 
@@ -77,16 +78,35 @@ public class ControllerOpstine {
             return null;
         }
     }
+    
+    public ArrayList<SpisakOpstina> vratiOpstine(){
+        ArrayList<SpisakOpstina> ol;
+        dbb.pokreniDBTransakciju();
+        ol = dbb.ucitajOpstine();
+        
+        if(trans){
+            dbb.potvrdiDBTransakciju();
+            for(SpisakOpstina li: ol){
+               System.out.print(li.getId() + " ");
+               System.out.println(li.getNaziv_opstine());
+            }
+            return ol;
+        }else {
+            dbb.ponistiDBTransakciju();
+            return null;
+        }
+    
+    }
 
     public void testMethod(){
    
     
     }
 
-   /* public static void main(String args[]) {
+   /*public static void main(String args[]) {
         ControllerOpstine ctrlOpst = new ControllerOpstine();
        
-        ctrlOpst.obrisiOpstine(200);
+        ctrlOpst.vratiOpstine();
       
-    }*/
+    }*/ 
 }

@@ -1,17 +1,18 @@
 package dbbroker;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import model.Glasaci;
 import model.Opstine;
+import model.SpisakOpstina;
 
 public class DBBroker {
 
     private Connection conn;
     private Statement st;
     private PreparedStatement ps = null;
+    private String upit;
 
     public void pokreniDBTransakciju() {
         try {
@@ -135,39 +136,70 @@ public class DBBroker {
         return opstine;
     }
 
+    public ArrayList<SpisakOpstina> ucitajOpstine() {
+        ArrayList<SpisakOpstina> ol = new ArrayList<>();
+        SpisakOpstina opst;
+        try {
+            st = conn.createStatement();
+            upit = "SELECT DISTINCT so.id AS so_id, so.naziv_opstine FROM opstine o INNER JOIN spisak_opstina so ON o.opstina_id = so.id";
+
+            ResultSet rs = st.executeQuery(upit);
+            while (rs.next()) {
+                int id = rs.getInt("so_id");
+                String naziv_opstine = rs.getString("naziv_opstine");
+                opst = new SpisakOpstina();
+                opst.setId(id);
+                opst.setNaziv_opstine(naziv_opstine);
+               /* System.out.print(opst.getId() + " ");
+                System.out.println(opst.getNaziv_opstine());*/
+                ol.add(opst);
+               
+            }
+
+        } catch (Exception e) {
+
+        }
+
+        /**/for (SpisakOpstina so : ol) {
+            System.out.print(so.getId() + " ");
+            System.out.println(so.getNaziv_opstine());
+        }
+        return ol;
+    }
+
     /*Metode za ControllerGlasaci*/
     public boolean snimi_izmeni_obrisi_Glasaca(Glasaci glasaci) {
 
         try {
             st = conn.createStatement();
             String upit;
-            if(glasaci.getStatus().equals("insert")){
+            if (glasaci.getStatus().equals("insert")) {
                 upit = "INSERT INTO snp_glasaci (ime, prezime, adresa, mesto, biracko_mesto, broj_telefona, datum, jmbg, datum_rodj, "
                         + "nosilac_glasova, ime_nosioca_glasova, opstinski_poverenik, regionalni_poverenik, republicki_poverenik, "
-                        + "username, password) VALUES('" + glasaci.getIme() +"', '" + glasaci.getPrezime() +"', '" 
-                        + glasaci.getAdresa() + "', '" + glasaci.getMesto()+ "', '" + glasaci.getBiracko_mesto() +"', '" 
-                        + glasaci.getBroj_telefona()+ "', '" + glasaci.getDatum()+ "', '" + glasaci.getJmbg()+ "', '" + glasaci.getDatum_rodj()
+                        + "username, password) VALUES('" + glasaci.getIme() + "', '" + glasaci.getPrezime() + "', '"
+                        + glasaci.getAdresa() + "', '" + glasaci.getMesto() + "', '" + glasaci.getBiracko_mesto() + "', '"
+                        + glasaci.getBroj_telefona() + "', '" + glasaci.getDatum() + "', '" + glasaci.getJmbg() + "', '" + glasaci.getDatum_rodj()
                         + "', '" + glasaci.getNosilac_glasova() + "', '" + glasaci.getIme_nosioca_glasova() + "', '" + glasaci.getOpstinski_poverenik()
-                        + "', '" + glasaci.getRegionalni_poverenik() + "', '" + glasaci.getRepublicki_poverenik() + "', '" 
+                        + "', '" + glasaci.getRegionalni_poverenik() + "', '" + glasaci.getRepublicki_poverenik() + "', '"
                         + glasaci.getUsername() + "', '" + glasaci.getPassword() + "')";
                 st.executeUpdate(upit);
                 System.out.println("Успешно снимљен гласач!");
-            }else if(glasaci.getStatus().equals("update")){
-                upit = "UPDATE snp_glasaci SET ime = '" + glasaci.getIme() +"', prezime = '" + glasaci.getPrezime() +"', adresa = '" 
-                        + glasaci.getAdresa() + "', mesto = '" + glasaci.getMesto()+ "', biracko_mesto = '" + glasaci.getBiracko_mesto() 
-                        +"', broj_telefona = '" + glasaci.getBroj_telefona()+ "', datum = '" + glasaci.getDatum()+ "', jmbg = '" + glasaci.getJmbg()
-                        + "', datum_rodj = '" + glasaci.getDatum_rodj() + "', nosilac_glasova = '" + glasaci.getNosilac_glasova() 
-                        + "', ime_nosioca_glasova ='" + glasaci.getIme_nosioca_glasova() + "', opstinski_poverenik = '" + glasaci.getOpstinski_poverenik() 
-                        + "', regionalni_poverenik = '" + glasaci.getRegionalni_poverenik() + "', republicki_poverenik ='" + glasaci.getRepublicki_poverenik() 
+            } else if (glasaci.getStatus().equals("update")) {
+                upit = "UPDATE snp_glasaci SET ime = '" + glasaci.getIme() + "', prezime = '" + glasaci.getPrezime() + "', adresa = '"
+                        + glasaci.getAdresa() + "', mesto = '" + glasaci.getMesto() + "', biracko_mesto = '" + glasaci.getBiracko_mesto()
+                        + "', broj_telefona = '" + glasaci.getBroj_telefona() + "', datum = '" + glasaci.getDatum() + "', jmbg = '" + glasaci.getJmbg()
+                        + "', datum_rodj = '" + glasaci.getDatum_rodj() + "', nosilac_glasova = '" + glasaci.getNosilac_glasova()
+                        + "', ime_nosioca_glasova ='" + glasaci.getIme_nosioca_glasova() + "', opstinski_poverenik = '" + glasaci.getOpstinski_poverenik()
+                        + "', regionalni_poverenik = '" + glasaci.getRegionalni_poverenik() + "', republicki_poverenik ='" + glasaci.getRepublicki_poverenik()
                         + "', username = '" + glasaci.getUsername() + "', password = '" + glasaci.getPassword() + "' WHERE id = '" + glasaci.getId() + "'";
                 st.executeUpdate(upit);
                 System.out.println("Успешно ажуриран гласач!");
-            }else if(glasaci.getStatus().equals("delete")) {
+            } else if (glasaci.getStatus().equals("delete")) {
                 upit = "DELETE FROM snp_glasaci WHERE id = '" + glasaci.getId() + "'";
                 st.executeUpdate(upit);
                 System.out.println("Успешно избрисан гласач!");
             }
-            
+
         } catch (SQLException ex) {
             System.out.println("ERROR: " + ex.getMessage());
         }
@@ -177,25 +209,13 @@ public class DBBroker {
     public boolean testMethod() {
         try {
             st = conn.createStatement();
-            //  String upit = "UPDATE snp_glasaci SET ime = 'Душко' WHERE id = 19";
-            String upit ;
 
-           upit = "DELETE FROM opstine WHERE id= 200";
-                st.executeUpdate(upit);
-                System.out.println("Успешно избрисана општина!");
+            String upit;
 
-            /*ResultSet rs = st.executeQuery(upit);
-          while(rs.next()){
-             int id = rs.getInt("id");
-             String ime = rs.getString("ime");
-             String prezime = rs.getString("prezime");
-             String adresa = rs.getString("adresa");
-             
-             System.out.println(id);
-             System.out.println(ime);
-             System.out.println(prezime);
-             System.out.println(adresa);
-          }*/
+            upit = "DELETE FROM opstine WHERE id= 200";
+            st.executeUpdate(upit);
+            System.out.println("Успешно избрисана општина!");
+
         } catch (Exception e) {
 
         }
@@ -203,15 +223,11 @@ public class DBBroker {
     }
 
     /*
- public static void main(String args[]) {
+    public static void main(String args[]) {
         DBBroker dbb = new DBBroker();
-        Opstine opst = new Opstine();
 
-        opst.setOpstina_id(32);
-        opst.setRegion_id(26);
-        opst.setStatus("insert");
         dbb.pokreniDBTransakciju();
-        //   dbb.snimi_izmeni_obrisi_Glasaca();
-        dbb.testMethod();
+        dbb.ucitajOpstine();
+
     }*/
 }
