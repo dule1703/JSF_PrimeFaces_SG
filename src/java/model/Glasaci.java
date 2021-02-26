@@ -10,7 +10,7 @@ public class Glasaci implements Serializable {
     private String ime;
     private String prezime;
     private String adresa;
-    private int mesto;
+    private String mesto;
     private String biracko_mesto;
     private String broj_telefona;
     private String datum;
@@ -66,11 +66,11 @@ public class Glasaci implements Serializable {
         this.adresa = adresa;
     }
     
-    public int getMesto() {
+    public String getMesto() {
         return mesto;
     }
 
-    public void setMesto(int mesto) {
+    public void setMesto(String mesto) {
         this.mesto = mesto;
     }
 

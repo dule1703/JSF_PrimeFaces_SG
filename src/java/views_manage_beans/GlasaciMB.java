@@ -4,6 +4,7 @@ import controller.ControllerGlasaci;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
@@ -21,7 +22,7 @@ public class GlasaciMB implements Serializable {
     private String ime;
     private String prezime;
     private String adresa;
-    private int mesto;
+    private String mesto;
     private String biracko_mesto;
     private String broj_telefona;
     private String datum;
@@ -34,6 +35,19 @@ public class GlasaciMB implements Serializable {
     private String republicki_poverenik;
     private String username;
     private String password;
+    private ArrayList<String> listaNosilacaGlasova;  
+    private ArrayList<String> listaImenaNosilaca;   
+    private boolean enabled;
+
+    public void toggle() {
+        enabled = !enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    
 
     private ControllerGlasaci ctrlGlasaci;
 
@@ -69,11 +83,11 @@ public class GlasaciMB implements Serializable {
         this.adresa = adresa;
     }
 
-    public int getMesto() {
+    public String getMesto() {
         return mesto;
     }
 
-    public void setMesto(int mesto) {
+    public void setMesto(String mesto) {
         this.mesto = mesto;
     }
 
@@ -180,6 +194,26 @@ public class GlasaciMB implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public ArrayList<String> getListaNosilacaGlasova() {
+        return listaNosilacaGlasova;
+    }
+
+    public void setListaNosilacaGlasova(ArrayList<String> listaNosilacaGlasova) {
+        this.listaNosilacaGlasova = listaNosilacaGlasova;
+    }
+
+    public ArrayList<String> getListaImenaNosilaca() {
+        return listaImenaNosilaca;
+    }
+
+    public void setListaImenaNosilaca(ArrayList<String> listaImenaNosilaca) {
+        this.listaImenaNosilaca = listaImenaNosilaca;
+    }
+    
+    
+    
+    
 
     public String loginProject() {
         System.out.println("Ушао!");
@@ -210,8 +244,8 @@ public class GlasaciMB implements Serializable {
             DateFormat df_datumRodj = new SimpleDateFormat("dd/MM/yyyy");
             String datumRodjenja = df_datumRodj.format(getDatum_rodj());
             
-            ctrlGlasaci.snimiGlasaca(getIme(), getPrezime(), getAdresa(), 133, "Центар 2", getBroj_telefona(), datumToday , getJmbg(),
-                    datumRodjenja, "Не, немам носиоца", "", "", "", "", "", "");
+            ctrlGlasaci.snimiGlasaca(getIme(), getPrezime(), getAdresa(), getMesto(), getBiracko_mesto(), getBroj_telefona(), datumToday , getJmbg(),
+                    datumRodjenja, getNosilac_glasova(), getIme_nosioca_glasova(), "", "", "", "", "");
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Успешно снимљен гласач!", ""));
         } catch (Exception e) {
@@ -238,7 +272,15 @@ public class GlasaciMB implements Serializable {
 
     public GlasaciMB() {
         ctrlGlasaci = new ControllerGlasaci();
-
+        listaNosilacaGlasova = new ArrayList<>();
+        listaNosilacaGlasova.add("Изаберите опцију...");
+        listaNosilacaGlasova.add("Да, имам носиоца гласова");
+        listaNosilacaGlasova.add("Не, немам носиоца гласова");
+        listaNosilacaGlasova.add("Ја сам носилац");
+        
+        listaImenaNosilaca = new ArrayList<>();
+        listaImenaNosilaca.add("Marija Petrovic");
+        listaImenaNosilaca.add("Petar Maric");
     }
 
     /*public static void main(String args[]){

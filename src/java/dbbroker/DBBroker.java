@@ -136,13 +136,24 @@ public class DBBroker {
         return opstine;
     }
 
-    public ArrayList<SpisakOpstina> ucitajOpstine() {
+    public ArrayList<SpisakOpstina> ucitajOpstine(String currentUser) {        
         ArrayList<SpisakOpstina> ol = new ArrayList<>();
         SpisakOpstina opst;
         try {
             st = conn.createStatement();
-            upit = "SELECT DISTINCT so.id AS so_id, so.naziv_opstine FROM opstine o INNER JOIN spisak_opstina so ON o.opstina_id = so.id";
-
+            upit = "SELECT so.id AS so_id, so.naziv_opstine FROM spisak_opstina so "
+                    + "INNER JOIN opstine o ON o.opstina_id = so.id "
+                    + "INNER JOIN regioni r ON r.id = o.region_id "
+                    + "WHERE  o.region_id = (SELECT id FROM regioni WHERE naziv_regiona = (SELECT r.naziv_regiona FROM regioni r "
+                                                                                             + "INNER JOIN opstine o ON r.id = o.region_id "
+                                                                                             + "INNER JOIN spisak_opstina so ON so.id = o.opstina_id "
+                                                                                             + "INNER JOIN snp_glasaci g ON so.id = g.mesto "
+                                                                                             + "WHERE g.username='" + currentUser + "' AND g.regionalni_poverenik='да')) "
+                    + "OR so.naziv_opstine = (SELECT so.naziv_opstine FROM opstine o "
+                                            + "INNER JOIN spisak_opstina so ON so.id = o.opstina_id "
+                                            + "INNER JOIN regioni r ON o.region_id = r.id "
+                                            + "INNER JOIN snp_glasaci g ON so.id = g.mesto "
+                                        + "WHERE g.username='" + currentUser + "' AND g.opstinski_poverenik='да')";
             ResultSet rs = st.executeQuery(upit);
             while (rs.next()) {
                 int id = rs.getInt("so_id");
@@ -150,34 +161,42 @@ public class DBBroker {
                 opst = new SpisakOpstina();
                 opst.setId(id);
                 opst.setNaziv_opstine(naziv_opstine);
-               /* System.out.print(opst.getId() + " ");
-                System.out.println(opst.getNaziv_opstine());*/
                 ol.add(opst);
-               
+
             }
 
         } catch (Exception e) {
 
         }
 
-        /**/for (SpisakOpstina so : ol) {
+        /*
+        for (SpisakOpstina so : ol) {
             System.out.print(so.getId() + " ");
             System.out.println(so.getNaziv_opstine());
-        }
+        }*/
         return ol;
     }
 
     /*Metode za ControllerGlasaci*/
     public boolean snimi_izmeni_obrisi_Glasaca(Glasaci glasaci) {
+        int sifraMesta = 0;
 
         try {
             st = conn.createStatement();
             String upit;
+            String upitSelect;
+            upitSelect = "SELECT so.id, so.naziv_opstine FROM spisak_opstina so INNER JOIN opstine o ON o.opstina_id = so.id WHERE so.naziv_opstine LIKE '%" + glasaci.getMesto() + "'";
+            ResultSet rs = st.executeQuery(upitSelect);
+            while (rs.next()) {
+                sifraMesta = rs.getInt("id");
+                System.out.println(sifraMesta);
+            }
+
             if (glasaci.getStatus().equals("insert")) {
                 upit = "INSERT INTO snp_glasaci (ime, prezime, adresa, mesto, biracko_mesto, broj_telefona, datum, jmbg, datum_rodj, "
                         + "nosilac_glasova, ime_nosioca_glasova, opstinski_poverenik, regionalni_poverenik, republicki_poverenik, "
                         + "username, password) VALUES('" + glasaci.getIme() + "', '" + glasaci.getPrezime() + "', '"
-                        + glasaci.getAdresa() + "', '" + glasaci.getMesto() + "', '" + glasaci.getBiracko_mesto() + "', '"
+                        + glasaci.getAdresa() + "', '" + sifraMesta + "', '" + glasaci.getBiracko_mesto() + "', '"
                         + glasaci.getBroj_telefona() + "', '" + glasaci.getDatum() + "', '" + glasaci.getJmbg() + "', '" + glasaci.getDatum_rodj()
                         + "', '" + glasaci.getNosilac_glasova() + "', '" + glasaci.getIme_nosioca_glasova() + "', '" + glasaci.getOpstinski_poverenik()
                         + "', '" + glasaci.getRegionalni_poverenik() + "', '" + glasaci.getRepublicki_poverenik() + "', '"
@@ -186,7 +205,7 @@ public class DBBroker {
                 System.out.println("Успешно снимљен гласач!");
             } else if (glasaci.getStatus().equals("update")) {
                 upit = "UPDATE snp_glasaci SET ime = '" + glasaci.getIme() + "', prezime = '" + glasaci.getPrezime() + "', adresa = '"
-                        + glasaci.getAdresa() + "', mesto = '" + glasaci.getMesto() + "', biracko_mesto = '" + glasaci.getBiracko_mesto()
+                        + glasaci.getAdresa() + "', mesto = '" + sifraMesta + "', biracko_mesto = '" + glasaci.getBiracko_mesto()
                         + "', broj_telefona = '" + glasaci.getBroj_telefona() + "', datum = '" + glasaci.getDatum() + "', jmbg = '" + glasaci.getJmbg()
                         + "', datum_rodj = '" + glasaci.getDatum_rodj() + "', nosilac_glasova = '" + glasaci.getNosilac_glasova()
                         + "', ime_nosioca_glasova ='" + glasaci.getIme_nosioca_glasova() + "', opstinski_poverenik = '" + glasaci.getOpstinski_poverenik()
@@ -224,10 +243,29 @@ public class DBBroker {
 
     /*
     public static void main(String args[]) {
+        /*  Glasaci glas = new Glasaci();
+        glas.setIme("Марија");
+        glas.setPrezime("Павловић");
+        glas.setAdresa("Николе Тесле 43");
+        glas.setMesto("Мали Зворник");
+        glas.setBiracko_mesto("Центар 2");
+        glas.setBroj_telefona("064777777777");
+        glas.setDatum("15/02/2021");
+        glas.setJmbg("2222222222222");
+        glas.setDatum_rodj("19/02/1988");
+        glas.setNosilac_glasova("Не, немам носиоца");
+        glas.setIme_nosioca_glasova("");
+        glas.setOpstinski_poverenik("");
+        glas.setRegionalni_poverenik("");
+        glas.setRepublicki_poverenik("");
+        glas.setUsername("");
+        glas.setPassword("");
+        glas.setStatus("insert");
         DBBroker dbb = new DBBroker();
 
         dbb.pokreniDBTransakciju();
-        dbb.ucitajOpstine();
+
+        dbb.ucitajOpstine("jb_poverenik");
 
     }*/
 }

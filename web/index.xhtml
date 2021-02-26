@@ -3,15 +3,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Логовање</title>        
-        <link href="../src/java/lib/style.css" rel="stylesheet" type="text/css"/>
-
+        <title>Логовање</title>           
+        <link href="resources/css/style.css" rel="stylesheet" type="text/css"/>
+        <h:outputScript library="js" name="custom.js" />
+        
     </h:head>
     <h:body>    
 
-        <div class="formWrapper" style="display: flex;justify-content: center; align-items: center;height: 80vh;">
+        <div style="display: flex;justify-content: center; align-items: center;height: 80vh;">           
+                
+            
             <h:form id="loginForm">
 
 
@@ -22,15 +26,19 @@
                         <p:inputText id="username" value="#{glasaciMB.username}" required="true" />
                         <p:outputLabel for="password" value="Password:" /> 
                         <p:password id="password" value="#{glasaciMB.password}" required="true" />
-                       
+
                     </h:panelGrid>
-                    <p:commandButton   value="Login" action="#{glasaciMB.loginProject}" update="msg"></p:commandButton>
-           
+                    <p:commandButton   value="Login"  action="#{glasaciMB.loginProject}" actionListener="#{opstineMB.vratiOpstine}" update="msg">
+
+
+                    </p:commandButton>
+
 
                 </p:panel>
 
 
             </h:form>
+               
         </div>
 
 

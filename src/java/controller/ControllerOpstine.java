@@ -79,18 +79,19 @@ public class ControllerOpstine {
         }
     }
     
-    public ArrayList<SpisakOpstina> vratiOpstine(){
+    public ArrayList<SpisakOpstina> vratiOpstine(String currentUser){
         ArrayList<SpisakOpstina> ol;
         dbb.pokreniDBTransakciju();
-        ol = dbb.ucitajOpstine();
+        ol = dbb.ucitajOpstine(currentUser);
+        /* for(SpisakOpstina li: ol){
+               System.out.print(li.getId() + " ");
+               System.out.println(li.getNaziv_opstine());
+            }*/
         
         if(trans){
             dbb.potvrdiDBTransakciju();
-            for(SpisakOpstina li: ol){
-               System.out.print(li.getId() + " ");
-               System.out.println(li.getNaziv_opstine());
-            }
             return ol;
+            
         }else {
             dbb.ponistiDBTransakciju();
             return null;
@@ -103,10 +104,10 @@ public class ControllerOpstine {
     
     }
 
-   /*public static void main(String args[]) {
+   /* public static void main(String args[]) {
         ControllerOpstine ctrlOpst = new ControllerOpstine();
        
-        ctrlOpst.vratiOpstine();
+        ctrlOpst.vratiOpstine("oo_mzvornik");
       
-    }*/ 
+    }*/
 }

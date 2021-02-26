@@ -20,7 +20,7 @@ public class ControllerGlasaci {
         }
     }
 
-    public void snimiGlasaca(String ime, String prezime, String adresa, int mesto, String biracko_mesto, String broj_telefona,
+    public void snimiGlasaca(String ime, String prezime, String adresa, String mesto, String biracko_mesto, String broj_telefona,
                              String datum, String jmbg, String datum_rodj, String nosilac_glasova, String ime_nosioca_glasova,
                              String opstinski_poverenik, String regionalni_poverenik, String republicki_poverenik,
                              String username, String password) {
@@ -54,7 +54,7 @@ public class ControllerGlasaci {
         } //rollback
     }
 
-    public void izmeniGlasaca(int id,String ime, String prezime, String adresa, int mesto, String biracko_mesto, String broj_telefona,
+    public void izmeniGlasaca(int id,String ime, String prezime, String adresa, String mesto, String biracko_mesto, String broj_telefona,
                              String datum, String jmbg, String datum_rodj, String nosilac_glasova, String ime_nosioca_glasova,
                              String opstinski_poverenik, String regionalni_poverenik, String republicki_poverenik,
                              String username, String password) {
@@ -113,9 +113,9 @@ public class ControllerGlasaci {
 
     /* public static void main(String args[]) {
         ControllerGlasaci ctrlGlas = new ControllerGlasaci();
-        /* Boolean bool = ctrlGlas.checkLogin("oo_mzvornik", "oo_mzvornik");
-        System.out.println(bool);
-        ctrlGlas.izmeniGlasaca(21, "Марија", "Павловић", "Николе Тесле 43", 106, "Центар 2", "064777777777", "15/02/2021", "2222222222222", 
+        // Boolean bool = ctrlGlas.checkLogin("oo_mzvornik", "oo_mzvornik");
+        //System.out.println(bool);
+        ctrlGlas.snimiGlasaca("Марија", "Павловић", "Николе Тесле 43", "Мали Зворник", "Центар 2", "064777777777", "15/02/2021", "2222222222222", 
                 "19/02/1988", "Не, немам носиоца", "", "", "", "", "", "");
 
     }*/
